@@ -62,6 +62,7 @@ public class Grammar {
 						for (Symbol D: P.getDestiny()) {
 							if (D == nT) {
 								prodsToRemove.add(P);
+								break;
 							}
 						}
 					}
