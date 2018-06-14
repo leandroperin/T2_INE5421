@@ -16,13 +16,9 @@ public class Symbol {
 	/*
 	 * Creates a new Symbol
 	 * */
-	public Symbol(String _name, Type _type) throws Exception {
-		if (_name.length() == 1) {
-			name = (_type == Type.NON_TERMINAL) ? _name.toUpperCase() : _name.toLowerCase();
-			type = _type;
-		} else {
-			throw new Exception("NonTerminalSymbol needs to be a single character");
-		}
+	public Symbol(String _name, Type _type) {
+		name = (_type == Type.NON_TERMINAL) ? _name.toUpperCase() : _name.toLowerCase();
+		type = _type;
 	}
 	
 	/*
