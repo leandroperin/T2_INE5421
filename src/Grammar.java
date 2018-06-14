@@ -25,14 +25,29 @@ public class Grammar {
 	 * Returns the fertile states
 	 * */
 	public Set<Symbol> getFertileStates() {
-		return null;
+		Set<Symbol> ret = new HashSet<Symbol>();
+		Boolean hasChange = true;
+		
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol nT: nonTerminalSymbols) {
+				if (nT.isFertile()) {
+					if (!ret.contains(nT)) {
+						ret.add(nT);
+						hasChange = true;
+					}
+				}
+			}
+		}
+		
+		return ret;
 	}
 	
 	/*
 	 * Verifies if the grammar is empty
 	 * */
 	public Boolean isEmpty() {
-		return getFertileStates().isEmpty();
+		return !getFertileStates().contains(initialSymbol);
 	}
 	
 	/*

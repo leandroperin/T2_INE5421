@@ -12,6 +12,7 @@ public class Symbol {
 	private Set<Production> productionsTo = new HashSet<Production>();
 	private Set<Symbol> first = new HashSet<Symbol>();
 	private Set<Symbol> follow = new HashSet<Symbol>();
+	private Boolean fertile = false;
 	
 	/*
 	 * Creates a new Symbol
@@ -19,6 +20,34 @@ public class Symbol {
 	public Symbol(String _name, Type _type) {
 		name = (_type == Type.NON_TERMINAL) ? _name.toUpperCase() : _name.toLowerCase();
 		type = _type;
+	}
+	
+	/*
+	 * Verifies if the symbol is fertile
+	 * */
+	public Boolean isFertile() {
+		for (Production P: productionsTo) {
+			Boolean temp = true;
+			for (Symbol b: P.getDestiny()) {
+				if (b.getType() == Symbol.Type.NON_TERMINAL && !b.getFertile()) {
+					temp = false;
+					break;
+				}
+			}
+			if (temp) {
+				fertile = true;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/*
+	 * Auxiliary function
+	 * */
+	public Boolean getFertile() {
+		return fertile;
 	}
 	
 	/*

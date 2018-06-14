@@ -5,6 +5,7 @@ public class Main {
 		Symbol S = new Symbol("S", Symbol.Type.NON_TERMINAL);
 		Symbol B = new Symbol("B", Symbol.Type.NON_TERMINAL);
 		Symbol A = new Symbol("A", Symbol.Type.NON_TERMINAL);
+		Symbol C = new Symbol("C", Symbol.Type.NON_TERMINAL);
 		
 		Symbol a = new Symbol("a", Symbol.Type.TERMINAL);
 		Symbol b = new Symbol("b", Symbol.Type.TERMINAL);
@@ -19,6 +20,7 @@ public class Main {
 		Symbol[] b2 = {epsilon};
 		Symbol[] a0 = {a, A};
 		Symbol[] a1 = {epsilon};
+		Symbol[] c0 = {C};
 		
 		Production p0 = new Production(S, s0);
 		Production p1 = new Production(S, s1);
@@ -27,6 +29,7 @@ public class Main {
 		Production p4 = new Production(B, b2);
 		Production p5 = new Production(A, a0);
 		Production p6 = new Production(A, a1);
+		Production p7 = new Production(C, c0);
 
 		Grammar G = new Grammar();
 		G.addProduction(p0);
@@ -36,12 +39,14 @@ public class Main {
 		G.addProduction(p4);
 		G.addProduction(p5);
 		G.addProduction(p6);
+		G.addProduction(p7);
 		
 //		for (Symbol s: S.getFirst()) {
 //			System.out.print(s.toString());
 //		}
 		
 		System.out.println(G.toString());
+		System.out.println(G.isEmpty());
 	}
 
 }
