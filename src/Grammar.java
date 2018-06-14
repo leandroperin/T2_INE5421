@@ -44,6 +44,41 @@ public class Grammar {
 	}
 	
 	/*
+	 * Remove non-fertile symbols
+	 * */
+	public void removeNonFertile() {
+		Set<Symbol> fertile = getFertileStates();
+		
+		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			if (!fertile.contains(nT)) {
+				symbolsToRemove.add(nT);
+				
+				for (Symbol S: nonTerminalSymbols) {
+					Set<Production> prodsToRemove = new HashSet<Production>();
+					
+					for (Production P: S.getProductionsTo()) {
+						for (Symbol D: P.getDestiny()) {
+							if (D == nT) {
+								prodsToRemove.add(P);
+							}
+						}
+					}
+					
+					for (Production P: prodsToRemove) {
+						S.getProductionsTo().remove(P);
+					}
+				}
+			}
+		}
+		
+		for (Symbol S: symbolsToRemove) {
+			nonTerminalSymbols.remove(S);
+		}
+	}
+	
+	/*
 	 * Verifies if the grammar is empty
 	 * */
 	public Boolean isEmpty() {
