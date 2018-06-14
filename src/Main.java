@@ -37,9 +37,11 @@ public class Main {
 		G.addProduction(p5);
 		G.addProduction(p6);
 		
-		for (Symbol s: S.getFirst()) {
-			System.out.print(s.toString());
-		}
+//		for (Symbol s: S.getFirst()) {
+//			System.out.print(s.toString());
+//		}
+		
+		System.out.println(G.toString());
 	}
 
 }

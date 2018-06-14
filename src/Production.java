@@ -39,9 +39,9 @@ public class Production {
 	public String getDestinyString() {
 		String ret = "";
 		for (Symbol s: destiny) {
-			ret += s.toString();
+			ret += s.toString() + " ";
 		}
-		return ret;
+		return ret.substring(0, ret.length() - 1);
 	}
 	
 }
