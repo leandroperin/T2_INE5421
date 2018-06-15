@@ -33,6 +33,18 @@ public class Main {
 		epsilonfree_text.setEditable(false);
 		frame.add(epsilonfree_text);
 		
+		JButton showMoreEpsilonFree = new JButton("Expandir");
+		showMoreEpsilonFree.setBounds(20, 250, 200, 30);
+		showMoreEpsilonFree.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, epsilonfree_text.getText(), "&-LIVRE", JOptionPane.PLAIN_MESSAGE);
+				
+			}
+		});
+		frame.add(showMoreEpsilonFree);
+		
 		JLabel na_lbl = new JLabel("Na");
 		na_lbl.setBounds(240, 280, 200, 30);
 		frame.add(na_lbl);
@@ -57,6 +69,18 @@ public class Main {
 		simple_text.setEditable(false);
 		frame.add(simple_text);
 		
+		JButton showMoreSimple = new JButton("Expandir");
+		showMoreSimple.setBounds(240, 250, 200, 30);
+		showMoreSimple.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, simple_text.getText(), "Sem produções simples", JOptionPane.PLAIN_MESSAGE);
+				
+			}
+		});
+		frame.add(showMoreSimple);
+		
 		JLabel nf_lbl = new JLabel("NF");
 		nf_lbl.setBounds(460, 280, 200, 30);
 		frame.add(nf_lbl);
@@ -75,6 +99,18 @@ public class Main {
 		infertile_text.setEditable(false);
 		frame.add(infertile_text);
 		
+		JButton showMoreInfertile = new JButton("Expandir");
+		showMoreInfertile.setBounds(460, 250, 200, 30);
+		showMoreInfertile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, infertile_text.getText(), "Sem símbolos inférteis", JOptionPane.PLAIN_MESSAGE);
+				
+			}
+		});
+		frame.add(showMoreInfertile);
+		
 		JLabel vi_lbl = new JLabel("Vi");
 		vi_lbl.setBounds(680, 280, 200, 30);
 		frame.add(vi_lbl);
@@ -92,6 +128,18 @@ public class Main {
 		unreachable_text.setBounds(680, 50, 200, 200);
 		unreachable_text.setEditable(false);
 		frame.add(unreachable_text);
+		
+		JButton showMoreUnreachable = new JButton("Expandir");
+		showMoreUnreachable.setBounds(680, 250, 200, 30);
+		showMoreUnreachable.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, unreachable_text.getText(), "Sem símbolos inalcançáveis", JOptionPane.PLAIN_MESSAGE);
+				
+			}
+		});
+		frame.add(showMoreUnreachable);
 	}
 	
 	private static void createComponents(JFrame frame) {
