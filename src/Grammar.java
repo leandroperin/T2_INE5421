@@ -385,8 +385,13 @@ public class Grammar {
 			for (String j: prods) {
 				LinkedList<Symbol> toAdd = new LinkedList<Symbol>();
 				for (String k: j.split("\\s+")) {
-					Symbol.Type type = (k.toUpperCase().equals(k)) ?
-										Symbol.Type.NON_TERMINAL : Symbol.Type.TERMINAL;
+					Symbol.Type type;
+					
+					if (k.matches("(&*)|(([a-z]*)([0-9]*))*")) {
+						type = Symbol.Type.TERMINAL;
+					} else {
+						type = Symbol.Type.NON_TERMINAL;
+					}
 					
 					if (!symbols.containsKey(k)) {
 						symbols.put(k, new Symbol(k, type));

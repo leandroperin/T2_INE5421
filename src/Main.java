@@ -147,10 +147,6 @@ public class Main {
 		GLC_Text.setBounds(50, 20, 200, 250);
 		frame.add(GLC_Text);
 		
-		JButton validate = new JButton("Verificar Propriedades");
-		validate.setBounds(50, 280, 200, 30);
-		frame.add(validate);
-		
 		JLabel empty = new JLabel("Vazia: NÃO");
 		empty.setBounds(50, 350, 200, 30);
 		frame.add(empty);
@@ -206,6 +202,20 @@ public class Main {
 		leftRecursionGLC.setBounds(550, 200, 200, 250);
 		leftRecursionGLC.setEditable(false);
 		frame.add(leftRecursionGLC);
+		
+		JButton validate = new JButton("Verificar Propriedades");
+		validate.setBounds(50, 280, 200, 30);
+		validate.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Grammar G = Grammar.readGrammar(GLC_Text.getText());
+				
+				String isEmpty = (G.isEmpty()) ? "Vazia: SIM" : "Vazia: NÃO";
+				empty.setText(isEmpty);
+			}
+		});
+		frame.add(validate);
 	}
 	
 	private static void setUpInterface(JFrame frame) {
