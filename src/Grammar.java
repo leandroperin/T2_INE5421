@@ -333,4 +333,47 @@ public class Grammar {
 		return ret;
 	}
 	
+	/*
+	 * Parse a grammar
+	 * */
+	public static Grammar readGrammar(String text) {
+		Grammar G = new Grammar();
+		
+		String[] lines = text.split(System.getProperty("line.separator"));
+		Map<String, Symbol> symbols = new HashMap<String, Symbol>();
+		
+		for (String l: lines) {
+			String FROM = l.split("-")[0];
+			
+			Symbol S;
+			if (!symbols.containsKey(FROM)) {
+				S = new Symbol(FROM, Symbol.Type.NON_TERMINAL);
+				symbols.put(FROM, S);
+			} else {
+				S = symbols.get(FROM);
+			}
+			
+			
+			String sub = l.split(">")[1];
+			String prods[] = sub.split("\\|");
+			
+			for (String j: prods) {
+				LinkedList<Symbol> toAdd = new LinkedList<Symbol>();
+				for (String k: j.split("\\s+")) {
+					Symbol.Type type = (k.toUpperCase().equals(k)) ?
+										Symbol.Type.NON_TERMINAL : Symbol.Type.TERMINAL;
+					
+					if (!symbols.containsKey(k)) {
+						symbols.put(k, new Symbol(k, type));
+					}
+					toAdd.add(symbols.get(k));
+				}
+				Production P = new Production(S, toAdd.toArray(new Symbol[toAdd.size()]));
+				G.addProduction(P);
+			}
+		}
+		
+		return G;
+	}
+	
 }
