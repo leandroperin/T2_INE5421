@@ -74,9 +74,9 @@ public class Grammar {
 	}
 	
 	/*
-	 * Remove unreachable symbols
+	 * Remove unreachable symbols returning VI set
 	 * */
-	private void removeUnreachable() {
+	public Set<Symbol> removeUnreachable() {
 		Set<Symbol> reachable = getReachableSymbols();
 		
 		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
@@ -88,12 +88,14 @@ public class Grammar {
 		}
 
 		nonTerminalSymbols.removeAll(symbolsToRemove);
+		
+		return reachable;
 	}
 	
 	/*
-	 * Remove non-fertile symbols
+	 * Remove non-fertile symbols returning NF set
 	 * */
-	private void removeNonFertile() {
+	public Set<Symbol> removeNonFertile() {
 		Set<Symbol> fertile = getFertileSymbols();
 		
 		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
@@ -119,6 +121,8 @@ public class Grammar {
 		}
 		
 		nonTerminalSymbols.removeAll(symbolsToRemove);
+		
+		return fertile;
 	}
 	
 	/*
@@ -126,14 +130,6 @@ public class Grammar {
 	 * */
 	public Boolean isEmpty() {
 		return !getFertileSymbols().contains(initialSymbol);
-	}
-	
-	/*
-	 * Remove the useless symbols
-	 * */
-	public void removeUseless() {
-		removeNonFertile();
-		removeUnreachable();
 	}
 	
 	/*
@@ -184,9 +180,9 @@ public class Grammar {
 	}
 	
 	/*
-	 * Turns the grammar into epsilon-free
+	 * Turns the grammar into epsilon-free returning the NE set
 	 * */
-	public void toEpsilonFree() {		
+	public Set<Symbol> toEpsilonFree() {		
 		Set<Symbol> Ne = buildNeSet();
 			
 		for (Symbol nT: nonTerminalSymbols) {
@@ -227,6 +223,8 @@ public class Grammar {
 			
 			initialSymbol = S;
 		}
+		
+		return Ne;
 	}
 	
 	/*
@@ -247,9 +245,9 @@ public class Grammar {
 	}
 	
 	/*
-	 * Remove simple productions
+	 * Remove simple productions returning the NA sets
 	 * */
-	public void removeSimpleProductions() {
+	public Map<Symbol, Set<Symbol>> removeSimpleProductions() {
 		Map<Symbol, Set<Symbol>> Na = new HashMap<Symbol, Set<Symbol>>();
 		
 		for (Symbol nT: nonTerminalSymbols) {
@@ -277,6 +275,8 @@ public class Grammar {
 				addProduction(P);
 			}
 		}
+		
+		return Na;
 	}
 	
 	/*
@@ -285,7 +285,8 @@ public class Grammar {
 	public void toProper() {
 		this.toEpsilonFree();
 		this.removeSimpleProductions();
-		this.removeUseless();
+		this.removeNonFertile();
+		this.removeUnreachable();
 	}
 	
 	/*
