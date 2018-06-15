@@ -29,7 +29,16 @@ public class Main {
 		G.addProduction(p3);
 		G.addProduction(p4);
 		
-		G.toProper();
+		System.out.println("Ne = " + G.toEpsilonFree());
+		System.out.println(G.toString());
+		
+		System.out.println("Na = " + G.removeSimpleProductions());
+		System.out.println(G.toString());
+		
+		System.out.println("Nf = " + G.removeNonFertile());
+		System.out.println(G.toString());
+		
+		System.out.println("Vi = " + G.removeUnreachable());
 		System.out.println(G.toString());
 	}
 
