@@ -195,26 +195,38 @@ public class Grammar {
 			nT.getProductionsTo().removeAll(prodsToRemove);
 		}
 		
-		/*
-		 * 	S->c S c|B A
-			A->a A|A B C|&
-			B->b B|C A|&
-			C->c C c|A S
-		 * */
-		
+		int count = 0;
 		for (Symbol nT: nonTerminalSymbols) {
 			for (Production P: nT.getProductionsTo()) {
+				int temp = 0;
 				for (Symbol S: P.getDestiny()) {
 					if (Ne.contains(S)) {
-						LinkedList<Symbol> newDestiny = new LinkedList<Symbol>();
-						for (Symbol S2: P.getDestiny()) {
-							if (S != S2) {
-								newDestiny.add(S2);
-							}
-						}
-						Production P2 = new Production(nT, newDestiny.toArray(new Symbol[newDestiny.size()]));
-						addProduction(P2);
+						temp++;
 					}
+				}
+				count = (temp > count) ? temp : count;
+			}
+		}
+		
+		for (int i = 0; i < count-1; i++) {
+			for (Symbol nT: nonTerminalSymbols) {
+				Set<Production> toAdd = new HashSet<Production>();
+				for (Production P: nT.getProductionsTo()) {
+					for (Symbol S: P.getDestiny()) {
+						if (Ne.contains(S)) {
+							LinkedList<Symbol> newDestiny = new LinkedList<Symbol>();
+							for (Symbol S2: P.getDestiny()) {
+								if (S != S2) {
+									newDestiny.add(S2);
+								}
+							}
+							Production P2 = new Production(nT, newDestiny.toArray(new Symbol[newDestiny.size()]));
+							toAdd.add(P2);
+						}
+					}
+				}
+				for (Production P: toAdd) {
+					addProduction(P);
 				}
 			}
 		}

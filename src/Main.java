@@ -95,7 +95,7 @@ public class Main {
 	}
 	
 	private static void createComponents(JFrame frame) {
-		JTextArea GLC_Text = new JTextArea("S->A B\nA->a A|&\nB->b B|&");
+		JTextArea GLC_Text = new JTextArea("S->c S c|B A\nA->a A|A B C|&\nB->b B|C A|&\nC->c C c|A S");
 		GLC_Text.setBounds(50, 20, 200, 250);
 		frame.add(GLC_Text);
 		

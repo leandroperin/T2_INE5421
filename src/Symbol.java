@@ -112,16 +112,18 @@ public class Symbol {
 	 * Add a production starting with this symbol
 	 * */
 	public void addProductionTo(Production P) {
-		Boolean add = true;
-		for (Production _P: productionsTo) {
-			if (_P.getDestinyString().equals(P.getDestinyString())) {
-				add = false;
-				break;
+		if (P.getDestiny().length > 0) {
+			Boolean add = true;
+			for (Production _P: productionsTo) {
+				if (_P.getDestinyString().equals(P.getDestinyString())) {
+					add = false;
+					break;
+				}
 			}
-		}
-		
-		if (add) {
-			productionsTo.add(P);
+			
+			if (add) {
+				productionsTo.add(P);
+			}
 		}
 	}
 	
