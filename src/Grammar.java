@@ -230,10 +230,53 @@ public class Grammar {
 	}
 	
 	/*
+	 * Builds the auxiliary set to remove simple productions
+	 * */
+	private Set<Symbol> buildNaSet(Symbol nT) {
+		Set<Symbol> Na = new HashSet<Symbol>();
+		Na.add(nT);
+		
+		for (Production P: nT.getProductionsTo()) {
+			if (P.getDestiny().length == 1 && P.getDestiny()[0].getType() == Symbol.Type.NON_TERMINAL) {
+				Na.add(P.getDestiny()[0]);
+				Na.addAll(buildNaSet(P.getDestiny()[0]));
+			}
+		}
+		
+		return Na;
+	}
+	
+	/*
 	 * Remove simple productions
 	 * */
 	public void removeSimpleProductions() {
+		Map<Symbol, Set<Symbol>> Na = new HashMap<Symbol, Set<Symbol>>();
 		
+		for (Symbol nT: nonTerminalSymbols) {
+			Na.put(nT, buildNaSet(nT));
+		}
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			Set<Production> toRemove = new HashSet<Production>();
+			for (Production P: nT.getProductionsTo()) {
+				if (P.getDestiny().length == 1 && P.getDestiny()[0].getType() == Symbol.Type.NON_TERMINAL) {
+					toRemove.add(P);
+				}
+			}
+			nT.getProductionsTo().removeAll(toRemove);
+		}
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			Set<Production> toAdd = new HashSet<Production>();
+			for (Symbol S: Na.get(nT)) {
+				for (Production P: S.getProductionsTo()) {
+					toAdd.add(new Production(nT, P.getDestiny()));
+				}
+			}
+			for (Production P: toAdd) {
+				addProduction(P);
+			}
+		}
 	}
 	
 	/*
