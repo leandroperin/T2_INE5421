@@ -206,7 +206,22 @@ public class Grammar {
 			}
 		}
 		
-		
+		for (Symbol nT: nonTerminalSymbols) {
+			for (Production P: nT.getProductionsTo()) {
+				for (Symbol S: P.getDestiny()) {
+					if (Ne.contains(S)) {
+						LinkedList<Symbol> newDestiny = new LinkedList<Symbol>();
+						for (Symbol S2: P.getDestiny()) {
+							if (S != S2) {
+								newDestiny.add(S2);
+							}
+						}
+						Production P2 = new Production(nT, newDestiny.toArray(new Symbol[newDestiny.size()]));
+						addProduction(P2);
+					}
+				}
+			}
+		}
 	}
 	
 	/*
