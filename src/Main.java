@@ -29,6 +29,7 @@ public class Main {
 		G.addProduction(p3);
 		G.addProduction(p4);
 		
+		System.out.println(G.toString());
 		G.toEpsilonFree();
 		System.out.println(G.toString());
 	}

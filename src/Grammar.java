@@ -222,6 +222,18 @@ public class Grammar {
 				}
 			}
 		}
+		
+		if (Ne.contains(initialSymbol)) {
+			Symbol S = new Symbol(initialSymbol.toString() + "'", Symbol.Type.NON_TERMINAL);
+			
+			Symbol[] s0 = {initialSymbol};
+			Symbol[] s1 = {new Symbol("&", Symbol.Type.TERMINAL)};
+			
+			addProduction(new Production(S, s0));
+			addProduction(new Production(S, s1));
+			
+			initialSymbol = S;
+		}
 	}
 	
 	/*
