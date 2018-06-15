@@ -195,6 +195,13 @@ public class Grammar {
 			nT.getProductionsTo().removeAll(prodsToRemove);
 		}
 		
+		/*
+		 * 	S->c S c|B A
+			A->a A|A B C|&
+			B->b B|C A|&
+			C->c C c|A S
+		 * */
+		
 		for (Symbol nT: nonTerminalSymbols) {
 			for (Production P: nT.getProductionsTo()) {
 				for (Symbol S: P.getDestiny()) {

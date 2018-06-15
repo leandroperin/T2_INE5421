@@ -13,8 +13,16 @@ public class Main {
 		frame.setSize(900, 570);
 		frame.setLayout(null);
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Gramática Própria");
+		
+		JLabel ne_lbl = new JLabel("Ne");
+		ne_lbl.setBounds(20, 280, 200, 30);
+		frame.add(ne_lbl);
+		
+		JTextArea ne_text = new JTextArea(G.toEpsilonFree().toString());
+		ne_text.setBounds(20, 310, 200, 200);
+		ne_text.setEditable(false);
+		frame.add(ne_text);
 		
 		JLabel epsilonfree_lbl = new JLabel("&-LIVRE");
 		epsilonfree_lbl.setBounds(20, 20, 200, 30);
@@ -25,68 +33,65 @@ public class Main {
 		epsilonfree_text.setEditable(false);
 		frame.add(epsilonfree_text);
 		
-		JLabel ne_lbl = new JLabel("Ne");
-		ne_lbl.setBounds(20, 280, 200, 30);
-		frame.add(ne_lbl);
-		
-		JTextArea ne_text = new JTextArea("");
-		ne_text.setBounds(20, 310, 200, 200);
-		ne_text.setEditable(false);
-		frame.add(ne_text);
-		
-		JLabel simple_lbl = new JLabel("Sem produções simples");
-		simple_lbl.setBounds(240, 20, 200, 30);
-		frame.add(simple_lbl);
-		
-		JTextArea simple_text = new JTextArea("");
-		simple_text.setBounds(240, 50, 200, 200);
-		simple_text.setEditable(false);
-		frame.add(simple_text);
-		
 		JLabel na_lbl = new JLabel("Na");
 		na_lbl.setBounds(240, 280, 200, 30);
 		frame.add(na_lbl);
+		
 		
 		JTextArea na_text = new JTextArea("");
 		na_text.setBounds(240, 310, 200, 200);
 		na_text.setEditable(false);
 		frame.add(na_text);
 		
-		JLabel infertile_lbl = new JLabel("Sem símbolos inférteis");
-		infertile_lbl.setBounds(460, 20, 200, 30);
-		frame.add(infertile_lbl);
+		String na_str = G.removeSimpleProductions().toString();
+		for (String s: na_str.split("],")) {
+			na_text.append(s + "],\n");
+		}
 		
-		JTextArea infertile_text = new JTextArea("");
-		infertile_text.setBounds(460, 50, 200, 200);
-		infertile_text.setEditable(false);
-		frame.add(infertile_text);
+		JLabel simple_lbl = new JLabel("Sem produções simples");
+		simple_lbl.setBounds(240, 20, 200, 30);
+		frame.add(simple_lbl);
+		
+		JTextArea simple_text = new JTextArea(G.toString());
+		simple_text.setBounds(240, 50, 200, 200);
+		simple_text.setEditable(false);
+		frame.add(simple_text);
 		
 		JLabel nf_lbl = new JLabel("NF");
 		nf_lbl.setBounds(460, 280, 200, 30);
 		frame.add(nf_lbl);
 		
-		JTextArea nf_text = new JTextArea("");
+		JTextArea nf_text = new JTextArea(G.removeNonFertile().toString());
 		nf_text.setBounds(460, 310, 200, 200);
 		nf_text.setEditable(false);
 		frame.add(nf_text);
 		
-		JLabel unreachable_lbl = new JLabel("Sem símbolos inalcançáveis");
-		unreachable_lbl.setBounds(680, 20, 200, 30);
-		frame.add(unreachable_lbl);
+		JLabel infertile_lbl = new JLabel("Sem símbolos inférteis");
+		infertile_lbl.setBounds(460, 20, 200, 30);
+		frame.add(infertile_lbl);
 		
-		JTextArea unreachable_text = new JTextArea("");
-		unreachable_text.setBounds(680, 50, 200, 200);
-		unreachable_text.setEditable(false);
-		frame.add(unreachable_text);
+		JTextArea infertile_text = new JTextArea(G.toString());
+		infertile_text.setBounds(460, 50, 200, 200);
+		infertile_text.setEditable(false);
+		frame.add(infertile_text);
 		
 		JLabel vi_lbl = new JLabel("Vi");
 		vi_lbl.setBounds(680, 280, 200, 30);
 		frame.add(vi_lbl);
 		
-		JTextArea vi_text = new JTextArea("");
+		JTextArea vi_text = new JTextArea(G.removeUnreachable().toString());
 		vi_text.setBounds(680, 310, 200, 200);
 		vi_text.setEditable(false);
 		frame.add(vi_text);
+		
+		JLabel unreachable_lbl = new JLabel("Sem símbolos inalcançáveis");
+		unreachable_lbl.setBounds(680, 20, 200, 30);
+		frame.add(unreachable_lbl);
+		
+		JTextArea unreachable_text = new JTextArea(G.toString());
+		unreachable_text.setBounds(680, 50, 200, 200);
+		unreachable_text.setEditable(false);
+		frame.add(unreachable_text);
 	}
 	
 	private static void createComponents(JFrame frame) {
