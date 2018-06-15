@@ -22,9 +22,9 @@ public class Grammar {
 	}
 	
 	/*
-	 * Returns the fertile states
+	 * Returns the fertile symbols
 	 * */
-	public Set<Symbol> getFertileStates() {
+	private Set<Symbol> getFertileSymbols() {
 		Set<Symbol> ret = new HashSet<Symbol>();
 		Boolean hasChange = true;
 		
@@ -44,10 +44,57 @@ public class Grammar {
 	}
 	
 	/*
+	 * Returns the reachable symbols
+	 * */
+	private Set<Symbol> getReachableSymbols() {
+		Set<Symbol> ret = new HashSet<Symbol>();
+		Boolean hasChange = true;
+		
+		ret.add(initialSymbol);
+		
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol S: ret) {
+				for (Production P: S.getProductionsTo()) {
+					for (Symbol nT: P.getDestiny()) {
+						if (nT.getType() == Symbol.Type.NON_TERMINAL) {
+							if (!ret.contains(nT)) {
+								ret.add(nT);
+								hasChange = true;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	/*
+	 * Remove unreachable symbols
+	 * */
+	private void removeUnreachable() {
+		Set<Symbol> reachable = getReachableSymbols();
+		
+		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			if (!reachable.contains(nT)) {
+				symbolsToRemove.add(nT);
+			}
+		}
+		
+		for (Symbol S: symbolsToRemove) {
+			nonTerminalSymbols.remove(S);
+		}
+	}
+	
+	/*
 	 * Remove non-fertile symbols
 	 * */
-	public void removeNonFertile() {
-		Set<Symbol> fertile = getFertileStates();
+	private void removeNonFertile() {
+		Set<Symbol> fertile = getFertileSymbols();
 		
 		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
 		
@@ -83,7 +130,15 @@ public class Grammar {
 	 * Verifies if the grammar is empty
 	 * */
 	public Boolean isEmpty() {
-		return !getFertileStates().contains(initialSymbol);
+		return !getFertileSymbols().contains(initialSymbol);
+	}
+	
+	/*
+	 * Remove the useless symbols
+	 * */
+	public void removeUseless() {
+		removeNonFertile();
+		removeUnreachable();
 	}
 	
 	/*
