@@ -5,6 +5,8 @@ public class Grammar {
 	private Set<Symbol> nonTerminalSymbols = new HashSet<Symbol>();
 	private Symbol initialSymbol = null;
 	
+	static Set<Symbol> NaCalculated = new HashSet<Symbol>();
+	
 	/*
 	 * Creates a new context-free grammar
 	 * */
@@ -250,13 +252,16 @@ public class Grammar {
 	 * Builds the auxiliary set to remove simple productions
 	 * */
 	private Set<Symbol> buildNaSet(Symbol nT) {
+		Grammar.NaCalculated.add(nT);
 		Set<Symbol> Na = new HashSet<Symbol>();
 		Na.add(nT);
 		
 		for (Production P: nT.getProductionsTo()) {
 			if (P.getDestiny().length == 1 && P.getDestiny()[0].getType() == Symbol.Type.NON_TERMINAL) {
 				Na.add(P.getDestiny()[0]);
-				Na.addAll(buildNaSet(P.getDestiny()[0]));
+				if (!Grammar.NaCalculated.contains(P.getDestiny()[0])) {
+					Na.addAll(buildNaSet(P.getDestiny()[0]));
+				}
 			}
 		}
 		
@@ -268,6 +273,7 @@ public class Grammar {
 	 * */
 	public Map<Symbol, Set<Symbol>> removeSimpleProductions() {
 		Map<Symbol, Set<Symbol>> Na = new HashMap<Symbol, Set<Symbol>>();
+		Grammar.NaCalculated.clear();
 		
 		for (Symbol nT: nonTerminalSymbols) {
 			Na.put(nT, buildNaSet(nT));
