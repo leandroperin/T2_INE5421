@@ -142,6 +142,64 @@ public class Grammar {
 	}
 	
 	/*
+	 * Builds the auxiliary set to epsilon-free transformation
+	 * */
+	private Set<Symbol> buildNeSet() {
+		Set<Symbol> Ne = new HashSet<Symbol>();
+		Boolean hasChange = true;
+		
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol nT: nonTerminalSymbols) {
+				for (Production P: nT.getProductionsTo()) {
+					if (P.getDestinyString().contains("&")) {
+						if (!Ne.contains(nT)) {
+							Ne.add(nT);
+							hasChange = true;
+							break;
+						}
+					} else {
+						Boolean toAdd = true;
+						
+						for (Symbol S: P.getDestiny()) {
+							if (S.getType() == Symbol.Type.TERMINAL) {
+								toAdd = false;
+								break;
+							} else {
+								if (!Ne.contains(S)) {
+									toAdd = false;
+									break;
+								}
+							}
+						}
+						
+						if (toAdd) {
+							Ne.add(nT);
+							hasChange = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return Ne;
+	}
+	
+	/*
+	 * Turns the grammar into epsilon-free
+	 * */
+	public Grammar toEpsilonFree() {
+		Grammar G = new Grammar();
+		
+		Set<Symbol> Ne = buildNeSet();
+		
+		
+		
+		return this;
+	}
+	
+	/*
 	 * Returns the grammar in String format
 	 * */
 	public String toString() {

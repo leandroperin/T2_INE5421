@@ -54,6 +54,7 @@ public class Symbol {
 	 * Find the FIRST of the symbol
 	 * */
 	private void calculateFirst() {
+		// TODO Fix
 		first.clear();
 		if (type == Type.TERMINAL) {
 			first.add(this);
@@ -96,7 +97,7 @@ public class Symbol {
 	 * Find the FOLLOW of the symbol
 	 * */
 	private void calculateFollow() {
-		
+		// TODO
 	}
 	
 	/*
