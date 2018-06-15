@@ -54,18 +54,20 @@ public class Grammar {
 		
 		while (hasChange) {
 			hasChange = false;
+			Set<Symbol> toAdd = new HashSet<Symbol>();
 			for (Symbol S: ret) {
 				for (Production P: S.getProductionsTo()) {
 					for (Symbol nT: P.getDestiny()) {
 						if (nT.getType() == Symbol.Type.NON_TERMINAL) {
 							if (!ret.contains(nT)) {
-								ret.add(nT);
+								toAdd.add(nT);
 								hasChange = true;
 							}
 						}
 					}
 				}
 			}
+			ret.addAll(toAdd);
 		}
 		
 		return ret;
@@ -84,10 +86,8 @@ public class Grammar {
 				symbolsToRemove.add(nT);
 			}
 		}
-		
-		for (Symbol S: symbolsToRemove) {
-			nonTerminalSymbols.remove(S);
-		}
+
+		nonTerminalSymbols.removeAll(symbolsToRemove);
 	}
 	
 	/*
@@ -113,17 +113,12 @@ public class Grammar {
 							}
 						}
 					}
-					
-					for (Production P: prodsToRemove) {
-						S.getProductionsTo().remove(P);
-					}
+					S.getProductionsTo().removeAll(prodsToRemove);
 				}
 			}
 		}
 		
-		for (Symbol S: symbolsToRemove) {
-			nonTerminalSymbols.remove(S);
-		}
+		nonTerminalSymbols.removeAll(symbolsToRemove);
 	}
 	
 	/*
@@ -201,9 +196,7 @@ public class Grammar {
 					prodsToRemove.add(P);
 				}
 			}
-			for (Production P: prodsToRemove) {
-				nT.getProductionsTo().remove(P);
-			}
+			nT.getProductionsTo().removeAll(prodsToRemove);
 		}
 		
 		for (Symbol nT: nonTerminalSymbols) {
@@ -234,6 +227,22 @@ public class Grammar {
 			
 			initialSymbol = S;
 		}
+	}
+	
+	/*
+	 * Remove simple productions
+	 * */
+	public void removeSimpleProductions() {
+		
+	}
+	
+	/*
+	 * Turns into a proper grammar
+	 * */
+	public void toProper() {
+		this.toEpsilonFree();
+		this.removeSimpleProductions();
+		this.removeUseless();
 	}
 	
 	/*
