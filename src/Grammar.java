@@ -385,18 +385,20 @@ public class Grammar {
 			for (String j: prods) {
 				LinkedList<Symbol> toAdd = new LinkedList<Symbol>();
 				for (String k: j.split("\\s+")) {
-					Symbol.Type type;
+					Symbol.Type type = null;
 					
-					if (k.matches("(&*)|(([a-z]*)([0-9]*))*")) {
-						type = Symbol.Type.TERMINAL;
-					} else {
+					if (k.matches("[A-Z]+.*")) {
 						type = Symbol.Type.NON_TERMINAL;
+					} else if (k.matches("[^A-Z]*")) {
+						type = Symbol.Type.TERMINAL;
 					}
 					
-					if (!symbols.containsKey(k)) {
-						symbols.put(k, new Symbol(k, type));
+					if (type != null) {
+						if (!symbols.containsKey(k)) {
+							symbols.put(k, new Symbol(k, type));
+						}
+						toAdd.add(symbols.get(k));
 					}
-					toAdd.add(symbols.get(k));
 				}
 				Production P = new Production(S, toAdd.toArray(new Symbol[toAdd.size()]));
 				G.addProduction(P);
