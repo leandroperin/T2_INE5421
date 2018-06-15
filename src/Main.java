@@ -29,8 +29,8 @@ public class Main {
 		G.addProduction(p3);
 		G.addProduction(p4);
 		
-		Grammar G2 = G.toEpsilonFree();
-		System.out.println(G2.toString());
+		G.toEpsilonFree();
+		System.out.println(G.toString());
 	}
 
 }

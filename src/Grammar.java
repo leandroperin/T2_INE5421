@@ -174,9 +174,11 @@ public class Grammar {
 						}
 						
 						if (toAdd) {
-							Ne.add(nT);
-							hasChange = true;
-							break;
+							if (!Ne.contains(nT)) {
+								Ne.add(nT);
+								hasChange = true;
+								break;
+							}
 						}
 					}
 				}
@@ -189,14 +191,22 @@ public class Grammar {
 	/*
 	 * Turns the grammar into epsilon-free
 	 * */
-	public Grammar toEpsilonFree() {
-		Grammar G = new Grammar();
-		
+	public void toEpsilonFree() {		
 		Set<Symbol> Ne = buildNeSet();
+			
+		for (Symbol nT: nonTerminalSymbols) {
+			Set<Production> prodsToRemove = new HashSet<Production>();	
+			for (Production P: nT.getProductionsTo()) {
+				if (P.getDestinyString().contains("&")) {
+					prodsToRemove.add(P);
+				}
+			}
+			for (Production P: prodsToRemove) {
+				nT.getProductionsTo().remove(P);
+			}
+		}
 		
 		
-		
-		return this;
 	}
 	
 	/*
