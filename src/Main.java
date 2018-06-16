@@ -147,15 +147,15 @@ public class Main {
 		GLC_Text.setBounds(50, 20, 200, 250);
 		frame.add(GLC_Text);
 		
-		JLabel empty = new JLabel("Vazia: NÃO");
+		JLabel empty = new JLabel("Vazia:");
 		empty.setBounds(50, 350, 200, 30);
 		frame.add(empty);
 		
-		JLabel finite = new JLabel("Finita: NÃO");
+		JLabel finite = new JLabel("Finita:");
 		finite.setBounds(50, 380, 200, 30);
 		frame.add(finite);
 		
-		JLabel infinite = new JLabel("Infinita: SIM");
+		JLabel infinite = new JLabel("Infinita:");
 		infinite.setBounds(50, 410, 200, 30);
 		frame.add(infinite);
 		
@@ -213,6 +213,11 @@ public class Main {
 				
 				String isEmpty = (G.isEmpty()) ? "Vazia: SIM" : "Vazia: NÃO";
 				empty.setText(isEmpty);
+				
+				String isFinite = (G.isInfinite()) ? "Finita: NÃO" : "Finita: SIM";
+//				String isInfinite = (G.isInfinite()) ? "Infinita: SIM" : "Infinita: NÃO";
+				finite.setText(isFinite);
+//				infinite.setText(isInfinite);
 			}
 		});
 		frame.add(validate);

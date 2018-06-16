@@ -19,6 +19,13 @@ public class Grammar {
 	 * */
 	public void addProduction(Production P) {
 		initialSymbol = (initialSymbol == null) ? P.getFrom() : initialSymbol;
+		
+		for (Symbol S: P.getDestiny()) {
+			if (S.getType() == Symbol.Type.NON_TERMINAL) {
+				nonTerminalSymbols.add(S);
+			}
+		}
+		
 		nonTerminalSymbols.add(P.getFrom());
 		P.getFrom().addProductionTo(P);
 	}
@@ -132,6 +139,52 @@ public class Grammar {
 	 * */
 	public Boolean isEmpty() {
 		return !getFertileSymbols().contains(initialSymbol);
+	}
+	
+	/*
+	 * Verifies if the grammar is infinite
+	 * */
+	public Boolean isInfinite() {
+		this.removeNonFertile();
+		this.removeUnreachable();
+		
+		Map<Symbol, Set<Symbol>> symbolSet = new HashMap<Symbol, Set<Symbol>>();
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			Set<Symbol> temp = new HashSet<Symbol>();
+			for (Production P: nT.getProductionsTo()) {
+				for (Symbol S: P.getDestiny()) {
+					if (S.getType() == Symbol.Type.NON_TERMINAL) {
+						temp.add(S);
+					}
+				}
+			}
+			symbolSet.put(nT, temp);
+		}
+		System.out.println("--------------");
+		System.out.println(this.toString());
+		System.out.println(symbolSet);
+		
+		Boolean hasChange = true;
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol nT: nonTerminalSymbols) {
+				Set<Symbol> toAdd = new HashSet<Symbol>();
+				for (Symbol S: symbolSet.get(nT)) {
+					for (Symbol S2: symbolSet.get(S)) {
+						if (!symbolSet.get(nT).contains(S2)) {
+							toAdd.add(S2);
+							hasChange = true;
+						}
+					}
+				}
+				symbolSet.get(nT).addAll(toAdd);
+			}
+		}
+		
+		System.out.println(symbolSet);
+		
+		return true;
 	}
 	
 	/*
