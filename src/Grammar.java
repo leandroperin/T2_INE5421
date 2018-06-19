@@ -148,6 +148,10 @@ public class Grammar {
 		this.removeNonFertile();
 		this.removeUnreachable();
 		
+		if (nonTerminalSymbols.size() == 0) {
+			return false;
+		}
+		
 		Map<Symbol, Set<Symbol>> symbolSet = new HashMap<Symbol, Set<Symbol>>();
 		
 		for (Symbol nT: nonTerminalSymbols) {
@@ -161,9 +165,6 @@ public class Grammar {
 			}
 			symbolSet.put(nT, temp);
 		}
-		System.out.println("--------------");
-		System.out.println(this.toString());
-		System.out.println(symbolSet);
 		
 		Boolean hasChange = true;
 		while (hasChange) {
@@ -181,8 +182,6 @@ public class Grammar {
 				symbolSet.get(nT).addAll(toAdd);
 			}
 		}
-		
-		System.out.println(symbolSet);
 		
 		return true;
 	}

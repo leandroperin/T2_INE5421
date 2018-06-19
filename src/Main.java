@@ -214,10 +214,13 @@ public class Main {
 				String isEmpty = (G.isEmpty()) ? "Vazia: SIM" : "Vazia: NÃO";
 				empty.setText(isEmpty);
 				
-				String isFinite = (G.isInfinite()) ? "Finita: NÃO" : "Finita: SIM";
-//				String isInfinite = (G.isInfinite()) ? "Infinita: SIM" : "Infinita: NÃO";
-				finite.setText(isFinite);
-//				infinite.setText(isInfinite);
+				if (G.isInfinite()) {
+					finite.setText("Finita: NÃO");
+					infinite.setText("Infinita: SIM");
+				} else {
+					finite.setText("Finita: SIM");
+					infinite.setText("Infinita: NÃO");
+				}
 			}
 		});
 		frame.add(validate);
