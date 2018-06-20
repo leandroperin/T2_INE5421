@@ -268,7 +268,7 @@ public class Grammar {
 			}
 		}
 		
-		for (int i = 0; i < count-1; i++) {
+		for (int i = 0; i < count; i++) {
 			for (Symbol nT: nonTerminalSymbols) {
 				Set<Production> toAdd = new HashSet<Production>();
 				for (Production P: nT.getProductionsTo()) {
