@@ -2,6 +2,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Main {
 	
@@ -174,13 +176,31 @@ public class Main {
 		firstFollow.setBounds(300, 80, 200, 30);
 		frame.add(firstFollow);
 		
-		JLabel factored = new JLabel("Fatorada: SIM");
+		JLabel factored = new JLabel("Fatorada:");
 		factored.setBounds(300, 210, 200, 30);
 		frame.add(factored);
 		
-		JLabel factorable = new JLabel("Fatorável em n passos: SIM");
-		factorable.setBounds(300, 240, 200, 30);
+		JLabel factorable = new JLabel("Fatorável em 5 passos:");
+		factorable.setBounds(300, 280, 200, 30);
 		frame.add(factorable);
+		
+		SpinnerModel value = new SpinnerNumberModel(5, 1, 99, 1);
+		JSpinner factorable_spinner = new JSpinner(value);
+		factorable_spinner.setBounds(300, 240, 200, 30);
+		factorable_spinner.setToolTipText("Digite a quantidade de passos");
+		factorable_spinner.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				int value = (int) factorable_spinner.getValue();
+				if (value > 0 || value < 100) {
+					
+					factorable.setText("Fatorável em " + value + " passos:");
+					
+				}
+			}
+		});
+		frame.add(factorable_spinner);
 		
 		JButton leftRecursionVerification = new JButton("Verificar Recursões");
 		leftRecursionVerification.setBounds(550, 20, 200, 30);
