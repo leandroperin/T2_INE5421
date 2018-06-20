@@ -193,11 +193,14 @@ public class Main {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				int value = (int) factorable_spinner.getValue();
-				if (value > 0 || value < 100) {
-					
-					factorable.setText("Fatorável em " + value + " passos:");
-					
+				
+				if (value < 1) {
+					value = 1;
+				} else if (value > 99) {
+					value = 99;
 				}
+				
+				factorable.setText("Fatorável em " + value + " passos:");
 			}
 		});
 		frame.add(factorable_spinner);
