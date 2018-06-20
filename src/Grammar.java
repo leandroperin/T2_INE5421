@@ -183,7 +183,13 @@ public class Grammar {
 			}
 		}
 		
-		return true;
+		for (Symbol nT: nonTerminalSymbols) {
+			if (symbolSet.get(nT).contains(nT)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/*
