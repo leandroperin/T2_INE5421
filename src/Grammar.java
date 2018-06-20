@@ -76,6 +76,64 @@ public class Grammar {
 	}
 	
 	/*
+	 * Verifies if the grammar is factorable in n steps
+	 * */
+	public Boolean isFactorable(int steps) {
+		Map<Symbol, Set<Symbol>> symbolSet = new HashMap<Symbol, Set<Symbol>>();
+		for (int i = 0; i < steps; i++) {
+			//Direct
+			Set<Production> prodsToAdd = new HashSet<Production>();
+			for (Symbol nT: nonTerminalSymbols) {
+				Set<Symbol> temp = new HashSet<Symbol>();
+				Set<Symbol> toAdd = new HashSet<Symbol>();
+				for (Production P: nT.getProductionsTo()) {
+					if (temp.contains(P.getDestiny()[0])) {
+						toAdd.add(P.getDestiny()[0]);
+					} else {
+						temp.add(P.getDestiny()[0]);
+					}
+				}
+				symbolSet.put(nT, toAdd);
+				
+				Set<Production> toRemove = new HashSet<Production>();
+				
+				for (Symbol S: symbolSet.get(nT)) {
+					Symbol nS = new Symbol(nT.toString() + S.toString(), Symbol.Type.NON_TERMINAL);
+					for (Production P: nT.getProductionsTo()) {
+						if (P.getDestiny()[0] == S) {
+							LinkedList<Symbol> temp2 = new LinkedList<Symbol>();
+							for (int j = 1; j < P.getDestiny().length; j++) {
+								temp2.add(P.getDestiny()[j]);
+							}
+							Production P2 = new Production(nS, temp2.toArray(new Symbol[temp2.size()]));
+							prodsToAdd.add(P2);
+							toRemove.add(P);
+						}
+					}
+					Symbol[] newProd = {S, nS};
+					addProduction(new Production(nT, newProd));
+				}
+				
+				nT.getProductionsTo().removeAll(toRemove);
+			}
+			for (Production P: prodsToAdd) {
+				addProduction(P);
+			}
+			
+			//Indirect
+			// TODO
+			
+			if (this.isFactored()) {
+				return true;
+			}
+			
+			symbolSet.clear();
+		}
+		
+		return false;
+	}
+	
+	/*
 	 * Returns the fertile symbols
 	 * */
 	private Set<Symbol> getFertileSymbols() {

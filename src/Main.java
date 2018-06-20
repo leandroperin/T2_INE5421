@@ -192,6 +192,8 @@ public class Main {
 			
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
+				Grammar G = Grammar.readGrammar(GLC_Text.getText());
+				
 				int value = (int) factorable_spinner.getValue();
 				
 				if (value < 1) {
@@ -200,7 +202,7 @@ public class Main {
 					value = 99;
 				}
 				
-				factorable.setText("Fatorável em " + value + " passos:");
+				factorable.setText((G.isFactorable(value)) ? "Fatorável em " + value + " passos: SIM" : "Fatorável em " + value + " passos: NÃO");
 			}
 		});
 		frame.add(factorable_spinner);
@@ -236,6 +238,16 @@ public class Main {
 				Grammar G = Grammar.readGrammar(GLC_Text.getText());
 				
 				factored.setText((G.isFactored()) ? "Fatorada: SIM" : "Fatorada: NÃO");
+				
+				int value = (int) factorable_spinner.getValue();
+				
+				if (value < 1) {
+					value = 1;
+				} else if (value > 99) {
+					value = 99;
+				}
+				
+				factorable.setText((G.isFactorable(value)) ? "Fatorável em " + value + " passos: SIM" : "Fatorável em " + value + " passos: NÃO");
 				
 				empty.setText((G.isEmpty()) ? "Vazia: SIM" : "Vazia: NÃO");
 				
