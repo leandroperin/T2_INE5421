@@ -228,6 +228,7 @@ public class Main {
 		
 		JButton validate = new JButton("Verificar Propriedades");
 		validate.setBounds(50, 280, 200, 30);
+		validate.setToolTipText("L(G) vazia, finita ou infinita, fatorada e se é fatorável em n passos");
 		validate.addActionListener(new ActionListener() {
 			
 			@Override
