@@ -31,6 +31,51 @@ public class Grammar {
 	}
 	
 	/*
+	 * Verifies if the grammar is factored
+	 * */
+	public Boolean isFactored() {
+		Map<Symbol, LinkedList<Symbol>> symbolSet = new HashMap<Symbol, LinkedList<Symbol>>();
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			LinkedList<Symbol> temp = new LinkedList<Symbol>();
+			for (Production P: nT.getProductionsTo()) {
+				temp.add(P.getDestiny()[0]);
+			}
+			symbolSet.put(nT, temp);
+		}
+		
+		Boolean hasChange = true;
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol nT: nonTerminalSymbols) {
+				LinkedList<Symbol> toAdd = new LinkedList<Symbol>();
+				LinkedList<Symbol> toRemove = new LinkedList<Symbol>();
+				for (Symbol S: symbolSet.get(nT)) {
+					if (S.getType() == Symbol.Type.NON_TERMINAL) {
+						for (Symbol S2: symbolSet.get(S)) {
+							toAdd.add(S2);
+						}
+						toRemove.add(S);
+						hasChange = true;
+					}
+				}
+				symbolSet.get(nT).addAll(toAdd);
+				symbolSet.get(nT).removeAll(toRemove);
+			}
+		}
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			Set<Symbol> temp = new HashSet<Symbol>();
+			temp.addAll(symbolSet.get(nT));
+			if (symbolSet.get(nT).size() != temp.size()) {
+				return false;
+			}
+		}		
+		
+		return true;
+	}
+	
+	/*
 	 * Returns the fertile symbols
 	 * */
 	private Set<Symbol> getFertileSymbols() {

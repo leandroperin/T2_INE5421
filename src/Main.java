@@ -235,8 +235,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				Grammar G = Grammar.readGrammar(GLC_Text.getText());
 				
-				String isEmpty = (G.isEmpty()) ? "Vazia: SIM" : "Vazia: NÃO";
-				empty.setText(isEmpty);
+				factored.setText((G.isFactored()) ? "Fatorada: SIM" : "Fatorada: NÃO");
+				
+				empty.setText((G.isEmpty()) ? "Vazia: SIM" : "Vazia: NÃO");
 				
 				if (G.isInfinite()) {
 					finite.setText("Finita: NÃO");
