@@ -111,7 +111,7 @@ public class Grammar {
 						}
 					}
 					Symbol[] newProd = {S, nS};
-					addProduction(new Production(nT, newProd));
+					prodsToAdd.add(new Production(nT, newProd));
 				}
 				
 				nT.getProductionsTo().removeAll(toRemove);
@@ -120,8 +120,36 @@ public class Grammar {
 				addProduction(P);
 			}
 			
-			//Indirect
-			// TODO
+			// Indirect
+			Set<Production> prodsToAdd2 = new HashSet<Production>();
+			Set<Production> prodsToRemove = new HashSet<Production>();
+			for (Symbol nT: nonTerminalSymbols) {
+				for (Production P: nT.getProductionsTo()) {
+					if (P.getDestiny()[0].getType() == Symbol.Type.NON_TERMINAL) {
+						for (Production P2: P.getDestiny()[0].getProductionsTo()) {
+							for (Production P3: nT.getProductionsTo()) {
+								if (P3.getDestiny()[0] == P.getDestiny()[0]) {
+									LinkedList<Symbol> destiny = new LinkedList<Symbol>();
+									for (Symbol S: P2.getDestiny()) {
+										destiny.add(S);
+									}
+									for (int j = 1; j < P3.getDestiny().length; j++) {
+										destiny.add(P3.getDestiny()[j]);
+									}
+									prodsToAdd2.add(new Production(nT, destiny.toArray(new Symbol[destiny.size()])));
+								}
+							}
+						}
+						prodsToRemove.add(P);
+					}
+				}
+			}
+			for (Symbol nT: nonTerminalSymbols) {
+				nT.getProductionsTo().removeAll(prodsToRemove);
+			}
+			for (Production P: prodsToAdd2) {
+				addProduction(P);
+			}
 			
 			if (this.isFactored()) {
 				return true;
