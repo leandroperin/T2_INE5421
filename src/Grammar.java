@@ -468,6 +468,23 @@ public class Grammar {
 			Na.put(nT, buildNaSet(nT));
 		}
 		
+		Boolean hasChange = true;
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol nT: nonTerminalSymbols) {
+				Set<Symbol> toAdd = new HashSet<Symbol>();
+				for (Symbol S: Na.get(nT)) {
+					for (Symbol S2: Na.get(S)) {
+						if (!Na.get(nT).contains(S2)) {
+							hasChange = true;
+							toAdd.add(S2);
+						}
+					}
+				}
+				Na.get(nT).addAll(toAdd);
+			}
+		}
+		
 		for (Symbol nT: nonTerminalSymbols) {
 			Set<Production> toRemove = new HashSet<Production>();
 			for (Production P: nT.getProductionsTo()) {
