@@ -184,7 +184,7 @@ public class Main {
 		factorable.setBounds(300, 280, 200, 30);
 		frame.add(factorable);
 		
-		SpinnerModel value = new SpinnerNumberModel(5, 1, 99, 1);
+		SpinnerModel value = new SpinnerNumberModel(1, 1, 99, 1);
 		JSpinner factorable_spinner = new JSpinner(value);
 		factorable_spinner.setBounds(300, 240, 200, 30);
 		factorable_spinner.setToolTipText("Digite a quantidade de passos");
