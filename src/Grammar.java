@@ -105,6 +105,9 @@ public class Grammar {
 							for (int j = 1; j < P.getDestiny().length; j++) {
 								temp2.add(P.getDestiny()[j]);
 							}
+							if (temp2.size() == 0) {
+								temp2.add(new Symbol("&", Symbol.Type.TERMINAL));
+							}
 							Production P2 = new Production(nS, temp2.toArray(new Symbol[temp2.size()]));
 							prodsToAdd.add(P2);
 							toRemove.add(P);
@@ -150,6 +153,9 @@ public class Grammar {
 			for (Production P: prodsToAdd2) {
 				addProduction(P);
 			}
+			
+			removeNonFertile();
+			removeUnreachable();
 			
 			if (this.isFactored()) {
 				return true;
