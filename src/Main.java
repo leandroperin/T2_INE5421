@@ -207,10 +207,6 @@ public class Main {
 		});
 		frame.add(factorable_spinner);
 		
-		JButton leftRecursionVerification = new JButton("Verificar Recursões");
-		leftRecursionVerification.setBounds(550, 20, 200, 30);
-		frame.add(leftRecursionVerification);
-		
 		JLabel leftRecursion = new JLabel("Possui recursões à esquerda:");
 		leftRecursion.setBounds(550, 80, 200, 30);
 		frame.add(leftRecursion);
@@ -218,6 +214,21 @@ public class Main {
 		JLabel leftRecursionRes = new JLabel("NÃO");
 		leftRecursionRes.setBounds(550, 100, 200, 30);
 		frame.add(leftRecursionRes);
+		
+		JButton leftRecursionVerification = new JButton("Verificar Recursões");
+		leftRecursionVerification.setBounds(550, 20, 200, 30);
+		leftRecursionVerification.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Grammar G = Grammar.readGrammar(GLC_Text.getText());
+				
+				G.toProper();
+				
+				leftRecursionRes.setText((G.hasLeftRecursion()) ? "SIM" : "NÃO");
+			}
+		});
+		frame.add(leftRecursionVerification);
 		
 		JButton leftRecursionElimination = new JButton("Eliminar Recursões");
 		leftRecursionElimination.setBounds(550, 140, 200, 30);

@@ -31,6 +31,68 @@ public class Grammar {
 	}
 	
 	/*
+	 * Verifies if a symbol of the grammar contains left recursion
+	 * */
+	private Boolean hasDirectLeftRecursion(Symbol nT) {
+		for (Production P: nT.getProductionsTo()) {
+			if (P.getDestiny()[0] == nT) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*
+	 * Remove direct left recursions
+	 * */
+	private void removeDirectLeftRecursion(Symbol nT) {
+		if (hasDirectLeftRecursion(nT)) {
+			Symbol nS = new Symbol(nT.toString() + "'", Symbol.Type.NON_TERMINAL);
+			Set<Production> prodsToAdd = new HashSet<Production>();
+			Set<Production> prodsToRemove = new HashSet<Production>();
+			for (Production P: nT.getProductionsTo()) {
+				if (P.getDestiny()[0] == nT) {
+					LinkedList<Symbol> temp = new LinkedList<Symbol>();
+					for (Symbol S: P.getDestiny()) {
+						temp.add(S);
+					}
+					temp.removeFirstOccurrence(nT);
+					temp.add(nS);
+					prodsToAdd.add(new Production(nS, temp.toArray(new Symbol[temp.size()])));
+					prodsToRemove.add(P);
+				} else {
+					LinkedList<Symbol> temp = new LinkedList<Symbol>();
+					for (Symbol S: P.getDestiny()) {
+						temp.add(S);
+					}
+					temp.add(nS);
+					prodsToAdd.add(new Production(nT, temp.toArray(new Symbol[temp.size()])));
+					prodsToRemove.add(P);
+				}
+			}
+			Symbol[] epsilon = {new Symbol("&", Symbol.Type.TERMINAL)};
+			prodsToAdd.add(new Production(nS, epsilon));
+			
+			nT.getProductionsTo().removeAll(prodsToRemove);
+			
+			for (Production P: prodsToAdd) {
+				addProduction(P);
+			}
+		}
+	}
+	
+	/*
+	 * Verifies if the grammar has a left recursion
+	 * */
+	public Boolean hasLeftRecursion() {
+		for (Symbol nT: nonTerminalSymbols) {
+			removeDirectLeftRecursion(nT);
+		}
+		System.out.println(toString());
+		return true;
+	}
+	
+	/*
 	 * Verifies if the grammar is factored
 	 * */
 	public Boolean isFactored() {
