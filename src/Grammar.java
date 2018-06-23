@@ -82,13 +82,62 @@ public class Grammar {
 	}
 	
 	/*
+	 * Remove left recursions
+	 * */
+	public void removeLeftRecursions() {
+		ArrayList<Symbol> nTList = new ArrayList<Symbol>();
+		nTList.addAll(nonTerminalSymbols);
+		
+		Set<Production> prodsToAdd = new HashSet<Production>();
+		Set<Production> prodsToRemove = new HashSet<Production>();
+		
+		for (int i = 0; i < nTList.size(); i++) {
+			for (int j = 0; j < i; j++) {
+				for (Production P: nTList.get(i).getProductionsTo()) {
+					if (P.getDestiny()[0] == nTList.get(j)) {
+						prodsToRemove.add(P);
+						
+						for (Production P2: nTList.get(j).getProductionsTo()) {
+							LinkedList<Symbol> temp = new LinkedList<Symbol>();
+							
+							for (Symbol S: P2.getDestiny()) {
+								temp.add(S);
+							}
+							
+							for (Symbol S: P.getDestiny()) {
+								temp.add(S);
+							}
+							
+							temp.remove(nTList.get(j));
+							
+							prodsToAdd.add(new Production(nTList.get(i), temp.toArray(new Symbol[temp.size()])));
+						}
+					}
+				}
+				
+				
+			}
+		}
+		
+		for (Production P: prodsToAdd) {
+			addProduction(P);
+		}
+		
+		for (Production P: prodsToRemove) {
+			Symbol FROM = P.getFrom();
+			
+			FROM.getProductionsTo().remove(P);
+		}
+	}
+	
+	/*
 	 * Verifies if the grammar has a left recursion
 	 * */
 	public Boolean hasLeftRecursion() {
-		for (Symbol nT: nonTerminalSymbols) {
-			removeDirectLeftRecursion(nT);
-		}
+		removeLeftRecursions();
+		
 		System.out.println(toString());
+		
 		return true;
 	}
 	
