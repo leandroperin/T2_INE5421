@@ -88,11 +88,11 @@ public class Grammar {
 		ArrayList<Symbol> nTList = new ArrayList<Symbol>();
 		nTList.addAll(nonTerminalSymbols);
 		
-		Set<Production> prodsToAdd = new HashSet<Production>();
-		Set<Production> prodsToRemove = new HashSet<Production>();
-		
 		for (int i = 0; i < nTList.size(); i++) {
 			for (int j = 0; j < i; j++) {
+				Set<Production> prodsToAdd = new HashSet<Production>();
+				Set<Production> prodsToRemove = new HashSet<Production>();
+				
 				for (Production P: nTList.get(i).getProductionsTo()) {
 					if (P.getDestiny()[0] == nTList.get(j)) {
 						prodsToRemove.add(P);
@@ -115,18 +115,18 @@ public class Grammar {
 					}
 				}
 				
+				for (Production P: prodsToAdd) {
+					addProduction(P);
+				}
 				
+				for (Production P: prodsToRemove) {
+					Symbol FROM = P.getFrom();
+					
+					FROM.getProductionsTo().remove(P);
+				}
 			}
-		}
-		
-		for (Production P: prodsToAdd) {
-			addProduction(P);
-		}
-		
-		for (Production P: prodsToRemove) {
-			Symbol FROM = P.getFrom();
 			
-			FROM.getProductionsTo().remove(P);
+			removeDirectLeftRecursion(nTList.get(i));
 		}
 	}
 	
