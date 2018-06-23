@@ -5,6 +5,8 @@ public class Grammar {
 	private Set<Symbol> nonTerminalSymbols = new HashSet<Symbol>();
 	private Symbol initialSymbol = null;
 	
+	private String recursiveNonTerminals = "";
+	
 	static Set<Symbol> NaCalculated = new HashSet<Symbol>();
 	
 	/*
@@ -36,6 +38,7 @@ public class Grammar {
 	private Boolean hasDirectLeftRecursion(Symbol nT) {
 		for (Production P: nT.getProductionsTo()) {
 			if (P.getDestiny()[0] == nT) {
+				recursiveNonTerminals += nT.toString() + ": Recursão Direta\n";
 				return true;
 			}
 		}
@@ -95,6 +98,7 @@ public class Grammar {
 				
 				for (Production P: nTList.get(i).getProductionsTo()) {
 					if (P.getDestiny()[0] == nTList.get(j)) {
+						recursiveNonTerminals += nTList.get(j).toString() + ": Recursão Indireta\n";
 						prodsToRemove.add(P);
 						
 						for (Production P2: nTList.get(j).getProductionsTo()) {
@@ -139,6 +143,13 @@ public class Grammar {
 		removeLeftRecursions();
 		
 		return (nonTerminalAmount == nonTerminalSymbols.size()) ? false : true;
+	}
+	
+	/*
+	 * Returns the recursive non-terminals
+	 * */
+	public String getRecursiveNonTerminals() {
+		return recursiveNonTerminals;
 	}
 	
 	/*
@@ -190,6 +201,10 @@ public class Grammar {
 	 * Verifies if the grammar is factorable in n steps
 	 * */
 	public Boolean isFactorable(int steps) {
+		if (isFactored()) {
+			return true;
+		}
+		
 		Map<Symbol, Set<Symbol>> symbolSet = new HashMap<Symbol, Set<Symbol>>();
 		for (int i = 0; i < steps; i++) {
 			//Direct

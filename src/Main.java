@@ -145,7 +145,7 @@ public class Main {
 	}
 	
 	private static void createComponents(JFrame frame) {
-		JTextArea GLC_Text = new JTextArea("S->c S c|B A\nA->a A|A B C|&\nB->b B|C A|&\nC->c C c|A S");
+		JTextArea GLC_Text = new JTextArea("E->E + T|T\nT->T * F|F\nF->( E )|id");
 		GLC_Text.setBounds(50, 20, 200, 250);
 		frame.add(GLC_Text);
 		
@@ -206,6 +206,23 @@ public class Main {
 			}
 		});
 		frame.add(factorable_spinner);
+		
+		JButton recNonTerminals = new JButton("Exibir NT Recursivos");
+		recNonTerminals.setBounds(300, 350, 200, 30);
+		recNonTerminals.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Grammar G = Grammar.readGrammar(GLC_Text.getText());
+				
+				G.toProper();
+				
+				G.removeLeftRecursions();
+				
+				JOptionPane.showMessageDialog(frame, G.getRecursiveNonTerminals(), "Não-Terminais Recursivos", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		frame.add(recNonTerminals);
 		
 		JLabel leftRecursion = new JLabel("Possui recursões à esquerda:");
 		leftRecursion.setBounds(550, 80, 200, 30);
