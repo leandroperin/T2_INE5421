@@ -134,11 +134,11 @@ public class Grammar {
 	 * Verifies if the grammar has a left recursion
 	 * */
 	public Boolean hasLeftRecursion() {
+		int nonTerminalAmount = nonTerminalSymbols.size();
+		
 		removeLeftRecursions();
 		
-		System.out.println(toString());
-		
-		return true;
+		return (nonTerminalAmount == nonTerminalSymbols.size()) ? false : true;
 	}
 	
 	/*

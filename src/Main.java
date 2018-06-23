@@ -230,14 +230,38 @@ public class Main {
 		});
 		frame.add(leftRecursionVerification);
 		
-		JButton leftRecursionElimination = new JButton("Eliminar Recursões");
-		leftRecursionElimination.setBounds(550, 140, 200, 30);
-		frame.add(leftRecursionElimination);
-		
 		JTextArea leftRecursionGLC = new JTextArea("");
-		leftRecursionGLC.setBounds(550, 200, 200, 250);
+		leftRecursionGLC.setBounds(550, 180, 200, 240);
 		leftRecursionGLC.setEditable(false);
 		frame.add(leftRecursionGLC);
+		
+		JButton leftRecursionElimination = new JButton("Eliminar Recursões");
+		leftRecursionElimination.setBounds(550, 140, 200, 30);
+		leftRecursionElimination.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Grammar G = Grammar.readGrammar(GLC_Text.getText());
+				
+				G.toProper();
+				
+				G.removeLeftRecursions();
+				
+				leftRecursionGLC.setText(G.toString());
+			}
+		});
+		frame.add(leftRecursionElimination);
+		
+		JButton expandGLC = new JButton("Expandir");
+		expandGLC.setBounds(550, 430, 200, 30);
+		expandGLC.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(frame, leftRecursionGLC.getText(), "Sem recursões à esquerda", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		frame.add(expandGLC);
 		
 		JButton validate = new JButton("Verificar Propriedades");
 		validate.setBounds(50, 280, 200, 30);
