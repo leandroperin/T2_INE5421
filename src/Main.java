@@ -6,6 +6,34 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Main {
+	private static void createFFFrame(JTextArea GLC) {
+		Grammar G = Grammar.readGrammar(GLC.getText());
+		
+		JFrame frame = new JFrame();
+		
+		frame.setSize(600, 570);
+		frame.setLayout(null);
+		frame.setVisible(true);
+		frame.setTitle("FIRST & FOLLOW");
+		
+		JLabel firstLbl = new JLabel("FIRST");
+		firstLbl.setBounds(20, 20, 200, 30);
+		frame.add(firstLbl);
+		
+		JTextArea firstArea = new JTextArea(G.getFirstMap().toString());
+		firstArea.setBounds(20, 50, 550, 220);
+		firstArea.setEditable(false);
+		frame.add(firstArea);
+		
+		JLabel followLbl = new JLabel("FOLLOW");
+		followLbl.setBounds(20, 280, 200, 30);
+		frame.add(followLbl);
+		
+		JTextArea followArea = new JTextArea(G.getFollowMap().toString());
+		followArea.setBounds(20, 310, 550, 220);
+		followArea.setEditable(false);
+		frame.add(followArea);
+	}
 	
 	private static void createProperGLCFrame(JTextArea GLC) {
 		Grammar G = Grammar.readGrammar(GLC.getText());
@@ -174,6 +202,13 @@ public class Main {
 		
 		JButton firstFollow = new JButton("Obter FIRST & FOLLOW");
 		firstFollow.setBounds(300, 80, 200, 30);
+		firstFollow.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createFFFrame(GLC_Text);				
+			}
+		});
 		frame.add(firstFollow);
 		
 		JLabel factored = new JLabel("Fatorada:");

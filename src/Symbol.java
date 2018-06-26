@@ -71,7 +71,7 @@ public class Symbol {
 					if (s.getType() == Type.TERMINAL) {
 						first.add(s);
 						break;
-					} else {
+					} else {					
 						Set<Symbol> firstY = s.getFirst(this);
 						first.addAll(firstY);
 						
