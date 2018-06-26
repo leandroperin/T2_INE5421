@@ -13,6 +13,7 @@ public class Symbol {
 	private Set<Symbol> first = new HashSet<Symbol>();
 	private Set<Symbol> follow = new HashSet<Symbol>();
 	private Boolean fertile = false;
+	private Boolean isInitial = false;
 	
 	/*
 	 * Creates a new Symbol
@@ -20,6 +21,13 @@ public class Symbol {
 	public Symbol(String _name, Type _type) {
 		name = (_type == Type.NON_TERMINAL) ? _name.toUpperCase() : _name.toLowerCase();
 		type = _type;
+	}
+	
+	/*
+	 * Set the symbol initial or not
+	 * */
+	public void setInitial(Boolean x) {
+		isInitial = x;
 	}
 	
 	/*
@@ -131,7 +139,7 @@ public class Symbol {
 	/*
 	 * Returns the FIRST of the symbol
 	 * */
-	public Set<Symbol> getFirst(Symbol from) {
+	private Set<Symbol> getFirst(Symbol from) {
 		calculateFirst(from);
 		return first;
 	}
@@ -140,7 +148,29 @@ public class Symbol {
 	 * Find the FOLLOW of the symbol
 	 * */
 	private void calculateFollow() {
-		// TODO
+		if (isInitial && !follow.toString().contains("$")) {
+			follow.add(new Symbol("$", Symbol.Type.TERMINAL));
+		}
+		
+		for (Production P: getProductionsTo()) {
+			Symbol[] S = P.getDestiny();
+			for (int i = 0; i < S.length; i++) {
+				if (i < S.length-1 && !S[i+1].toString().equals("&")) {
+					S[i].addSetToFollow(S[i+1].getFirst());
+				}
+					
+				if (i == S.length-1 || (i < S.length-1 && S[i+1].getFirst().toString().contains("&"))) {
+					S[i].addSetToFollow(this.follow);
+				}
+			}
+		}
+	}
+	
+	/*
+	 * Adds a set of symbols to the follow set
+	 * */
+	private void addSetToFollow(Set<Symbol> symbols) {
+		follow.addAll(symbols);
 	}
 	
 	/*

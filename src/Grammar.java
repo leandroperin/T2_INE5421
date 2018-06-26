@@ -22,6 +22,8 @@ public class Grammar {
 	public void addProduction(Production P) {
 		initialSymbol = (initialSymbol == null) ? P.getFrom() : initialSymbol;
 		
+		initialSymbol.setInitial(true);
+		
 		for (Symbol S: P.getDestiny()) {
 			if (S.getType() == Symbol.Type.NON_TERMINAL) {
 				nonTerminalSymbols.add(S);
@@ -30,6 +32,44 @@ public class Grammar {
 		
 		nonTerminalSymbols.add(P.getFrom());
 		P.getFrom().addProductionTo(P);
+	}
+	
+	/*
+	 * Returns the FOLLOW Map
+	 * */
+	public Map<Symbol, Set<Symbol>> getFollowMap() {
+		Map<Symbol, Set<Symbol>> ret = new HashMap<Symbol, Set<Symbol>>();
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			ret.put(nT, new HashSet<Symbol>());
+		}
+		
+		Boolean hasChange = true;
+		while (hasChange) {
+			hasChange = false;
+			for (Symbol nT: nonTerminalSymbols) {
+				Set<Symbol> f = nT.getFollow();
+				if (ret.get(nT).size() != f.size()) {
+					hasChange = true;
+					ret.get(nT).addAll(f);
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	/*
+	 * Returns the FIRST Map
+	 * */
+	public Map<Symbol, Set<Symbol>> getFirstMap() {
+		Map<Symbol, Set<Symbol>> ret = new HashMap<Symbol, Set<Symbol>>();
+		
+		for (Symbol nT: nonTerminalSymbols) {
+			ret.put(nT, nT.getFirst());
+		}
+		
+		return ret;
 	}
 	
 	/*
