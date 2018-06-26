@@ -338,6 +338,27 @@ public class Main {
 		    e.printStackTrace();
 		}
 		
+//		Grammar G = new Grammar();
+//		Symbol S = new Symbol("S", Symbol.Type.NON_TERMINAL);
+//		Symbol B = new Symbol("B", Symbol.Type.NON_TERMINAL);
+//		Symbol A = new Symbol("A", Symbol.Type.NON_TERMINAL);
+//		Symbol a = new Symbol("a", Symbol.Type.TERMINAL);
+//		Symbol b = new Symbol("b", Symbol.Type.TERMINAL);
+//		Symbol c = new Symbol("c", Symbol.Type.TERMINAL);
+//		Symbol d = new Symbol("d", Symbol.Type.TERMINAL);
+//		Symbol ep = new Symbol("&", Symbol.Type.TERMINAL);
+//		Symbol[] p1 = {A, a};
+//		Symbol[] p2 = {b};
+//		Symbol[] p3 = {S, b};
+//		Symbol[] p4 = {a};
+//		G.addProduction(new Production(S, p1));
+//		G.addProduction(new Production(S, p2));
+//		G.addProduction(new Production(A, p3));
+//		G.addProduction(new Production(A, p4));
+//		
+//		System.out.println("S: " + S.getFirst());
+//		System.out.println("A: " + A.getFirst());
+		
 		JFrame home = new JFrame();
 		
 		setUpInterface(home);

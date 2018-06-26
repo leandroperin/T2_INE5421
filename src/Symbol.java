@@ -54,7 +54,6 @@ public class Symbol {
 	 * Find the FIRST of the symbol
 	 * */
 	private void calculateFirst() {
-		// TODO Fix
 		first.clear();
 		if (type == Type.TERMINAL) {
 			first.add(this);
@@ -65,7 +64,7 @@ public class Symbol {
 						first.add(s);
 						break;
 					} else {
-						Set<Symbol> firstY = s.getFirst();
+						Set<Symbol> firstY = s.getFirst(this);
 						first.addAll(firstY);
 						
 						Boolean existEpsilon = false;
@@ -86,10 +85,54 @@ public class Symbol {
 	}
 	
 	/*
+	 * Find the FIRST of the symbol
+	 * */
+	private void calculateFirst(Symbol from) {
+		first.clear();
+		if (type == Type.TERMINAL) {
+			first.add(this);
+		} else {
+			for (Production P: productionsTo) {
+				if (P.getDestiny()[0] != from) {
+					for (Symbol s: P.getDestiny()) {
+						if (s.getType() == Type.TERMINAL) {
+							first.add(s);
+							break;
+						} else {
+							Set<Symbol> firstY = s.getFirst(this);
+							first.addAll(firstY);
+							
+							Boolean existEpsilon = false;
+							for (Symbol tmp: firstY) {
+								if (tmp.toString().equals("&")) {
+									existEpsilon = true;
+									break;
+								}
+							}
+							
+							if (!existEpsilon) {
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/*
 	 * Returns the FIRST of the symbol
 	 * */
 	public Set<Symbol> getFirst() {
 		calculateFirst();
+		return first;
+	}
+	
+	/*
+	 * Returns the FIRST of the symbol
+	 * */
+	public Set<Symbol> getFirst(Symbol from) {
+		calculateFirst(from);
 		return first;
 	}
 	
