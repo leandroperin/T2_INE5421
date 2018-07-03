@@ -4,46 +4,46 @@ public class Grammar {
 
 	private Set<Symbol> nonTerminalSymbols = new HashSet<Symbol>();
 	private Symbol initialSymbol = null;
-	
+
 	private String recursiveNonTerminals = "";
-	
+
 	static Set<Symbol> NaCalculated = new HashSet<Symbol>();
-	
+
 	/*
 	 * Creates a new context-free grammar
 	 * */
 	public Grammar() {
-		
+
 	}
-	
+
 	/*
 	 * Add a production to the grammar
 	 * */
 	public void addProduction(Production P) {
 		initialSymbol = (initialSymbol == null) ? P.getFrom() : initialSymbol;
-		
+
 		initialSymbol.setInitial(true);
-		
+
 		for (Symbol S: P.getDestiny()) {
 			if (S.getType() == Symbol.Type.NON_TERMINAL) {
 				nonTerminalSymbols.add(S);
 			}
 		}
-		
+
 		nonTerminalSymbols.add(P.getFrom());
 		P.getFrom().addProductionTo(P);
 	}
-	
+
 	/*
 	 * Returns the FOLLOW Map
 	 * */
 	public Map<Symbol, Set<Symbol>> getFollowMap() {
 		Map<Symbol, Set<Symbol>> ret = new HashMap<Symbol, Set<Symbol>>();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			ret.put(nT, new HashSet<Symbol>());
 		}
-		
+
 		Boolean hasChange = true;
 		while (hasChange) {
 			hasChange = false;
@@ -55,23 +55,23 @@ public class Grammar {
 				}
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	/*
 	 * Returns the FIRST Map
 	 * */
 	public Map<Symbol, Set<Symbol>> getFirstMap() {
 		Map<Symbol, Set<Symbol>> ret = new HashMap<Symbol, Set<Symbol>>();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			ret.put(nT, nT.getFirst());
 		}
-		
+
 		return ret;
 	}
-	
+
 	/*
 	 * Verifies if a symbol of the grammar contains left recursion
 	 * */
@@ -84,7 +84,7 @@ public class Grammar {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * Remove direct left recursions
 	 * */
@@ -115,89 +115,89 @@ public class Grammar {
 			}
 			Symbol[] epsilon = {new Symbol("&", Symbol.Type.TERMINAL)};
 			prodsToAdd.add(new Production(nS, epsilon));
-			
+
 			nT.getProductionsTo().removeAll(prodsToRemove);
-			
+
 			for (Production P: prodsToAdd) {
 				addProduction(P);
 			}
 		}
 	}
-	
+
 	/*
 	 * Remove left recursions
 	 * */
 	public void removeLeftRecursions() {
 		ArrayList<Symbol> nTList = new ArrayList<Symbol>();
 		nTList.addAll(nonTerminalSymbols);
-		
+
 		for (int i = 0; i < nTList.size(); i++) {
 			for (int j = 0; j < i; j++) {
 				Set<Production> prodsToAdd = new HashSet<Production>();
 				Set<Production> prodsToRemove = new HashSet<Production>();
-				
+
 				for (Production P: nTList.get(i).getProductionsTo()) {
 					if (P.getDestiny()[0] == nTList.get(j)) {
 						recursiveNonTerminals += nTList.get(j).toString() + ": Recursão Indireta\n";
 						prodsToRemove.add(P);
-						
+
 						for (Production P2: nTList.get(j).getProductionsTo()) {
 							LinkedList<Symbol> temp = new LinkedList<Symbol>();
-							
+
 							for (Symbol S: P2.getDestiny()) {
 								temp.add(S);
 							}
-							
+
 							for (Symbol S: P.getDestiny()) {
 								temp.add(S);
 							}
-							
+
 							temp.remove(nTList.get(j));
-							
+
 							prodsToAdd.add(new Production(nTList.get(i), temp.toArray(new Symbol[temp.size()])));
 						}
 					}
 				}
-				
+
 				for (Production P: prodsToAdd) {
 					addProduction(P);
 				}
-				
+
 				for (Production P: prodsToRemove) {
 					Symbol FROM = P.getFrom();
-					
+
 					FROM.getProductionsTo().remove(P);
 				}
 			}
-			
+
 			removeDirectLeftRecursion(nTList.get(i));
 		}
 	}
-	
+
 	/*
 	 * Verifies if the grammar has a left recursion
 	 * */
 	public Boolean hasLeftRecursion() {
 		int nonTerminalAmount = nonTerminalSymbols.size();
-		
+
 		removeLeftRecursions();
-		
+
 		return (nonTerminalAmount == nonTerminalSymbols.size()) ? false : true;
 	}
-	
+
 	/*
 	 * Returns the recursive non-terminals
 	 * */
 	public String getRecursiveNonTerminals() {
 		return recursiveNonTerminals;
 	}
-	
+
 	/*
 	 * Verifies if the grammar is factored
 	 * */
 	public Boolean isFactored() {
 		Map<Symbol, LinkedList<Symbol>> symbolSet = new HashMap<Symbol, LinkedList<Symbol>>();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			LinkedList<Symbol> temp = new LinkedList<Symbol>();
 			for (Production P: nT.getProductionsTo()) {
@@ -205,7 +205,7 @@ public class Grammar {
 			}
 			symbolSet.put(nT, temp);
 		}
-		
+
 		Boolean hasChange = true;
 		while (hasChange) {
 			hasChange = false;
@@ -225,18 +225,18 @@ public class Grammar {
 				symbolSet.get(nT).removeAll(toRemove);
 			}
 		}
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			Set<Symbol> temp = new HashSet<Symbol>();
 			temp.addAll(symbolSet.get(nT));
 			if (symbolSet.get(nT).size() != temp.size()) {
 				return false;
 			}
-		}		
-		
+		}
+
 		return true;
 	}
-	
+
 	/*
 	 * Verifies if the grammar is factorable in n steps
 	 * */
@@ -244,7 +244,7 @@ public class Grammar {
 		if (isFactored()) {
 			return true;
 		}
-		
+
 		Map<Symbol, Set<Symbol>> symbolSet = new HashMap<Symbol, Set<Symbol>>();
 		for (int i = 0; i < steps; i++) {
 			//Direct
@@ -260,9 +260,9 @@ public class Grammar {
 					}
 				}
 				symbolSet.put(nT, toAdd);
-				
+
 				Set<Production> toRemove = new HashSet<Production>();
-				
+
 				for (Symbol S: symbolSet.get(nT)) {
 					Symbol nS = new Symbol(nT.toString() + S.toString(), Symbol.Type.NON_TERMINAL);
 					for (Production P: nT.getProductionsTo()) {
@@ -282,13 +282,13 @@ public class Grammar {
 					Symbol[] newProd = {S, nS};
 					prodsToAdd.add(new Production(nT, newProd));
 				}
-				
+
 				nT.getProductionsTo().removeAll(toRemove);
 			}
 			for (Production P: prodsToAdd) {
 				addProduction(P);
 			}
-			
+
 			// Indirect
 			Set<Production> prodsToAdd2 = new HashSet<Production>();
 			Set<Production> prodsToRemove = new HashSet<Production>();
@@ -319,27 +319,27 @@ public class Grammar {
 			for (Production P: prodsToAdd2) {
 				addProduction(P);
 			}
-			
+
 			removeNonFertile();
 			removeUnreachable();
-			
+
 			if (this.isFactored()) {
 				return true;
 			}
-			
+
 			symbolSet.clear();
 		}
-		
+
 		return false;
 	}
-	
+
 	/*
 	 * Returns the fertile symbols
 	 * */
 	private Set<Symbol> getFertileSymbols() {
 		Set<Symbol> ret = new HashSet<Symbol>();
 		Boolean hasChange = true;
-		
+
 		while (hasChange) {
 			hasChange = false;
 			for (Symbol nT: nonTerminalSymbols) {
@@ -351,19 +351,19 @@ public class Grammar {
 				}
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	/*
 	 * Returns the reachable symbols
 	 * */
 	private Set<Symbol> getReachableSymbols() {
 		Set<Symbol> ret = new HashSet<Symbol>();
 		Boolean hasChange = true;
-		
+
 		ret.add(initialSymbol);
-		
+
 		while (hasChange) {
 			hasChange = false;
 			Set<Symbol> toAdd = new HashSet<Symbol>();
@@ -381,18 +381,18 @@ public class Grammar {
 			}
 			ret.addAll(toAdd);
 		}
-		
+
 		return ret;
 	}
-	
+
 	/*
 	 * Remove unreachable symbols returning VI set
 	 * */
 	public Set<Symbol> removeUnreachable() {
 		Set<Symbol> reachable = getReachableSymbols();
-		
+
 		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			if (!reachable.contains(nT)) {
 				symbolsToRemove.add(nT);
@@ -400,25 +400,25 @@ public class Grammar {
 		}
 
 		nonTerminalSymbols.removeAll(symbolsToRemove);
-		
+
 		return reachable;
 	}
-	
+
 	/*
 	 * Remove non-fertile symbols returning NF set
 	 * */
 	public Set<Symbol> removeNonFertile() {
 		Set<Symbol> fertile = getFertileSymbols();
-		
+
 		Set<Symbol> symbolsToRemove = new HashSet<Symbol>();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			if (!fertile.contains(nT)) {
 				symbolsToRemove.add(nT);
-				
+
 				for (Symbol S: nonTerminalSymbols) {
 					Set<Production> prodsToRemove = new HashSet<Production>();
-					
+
 					for (Production P: S.getProductionsTo()) {
 						for (Symbol D: P.getDestiny()) {
 							if (D == nT) {
@@ -431,32 +431,32 @@ public class Grammar {
 				}
 			}
 		}
-		
+
 		nonTerminalSymbols.removeAll(symbolsToRemove);
-		
+
 		return fertile;
 	}
-	
+
 	/*
 	 * Verifies if the grammar is empty
 	 * */
 	public Boolean isEmpty() {
 		return !getFertileSymbols().contains(initialSymbol);
 	}
-	
+
 	/*
 	 * Verifies if the grammar is infinite
 	 * */
 	public Boolean isInfinite() {
 		this.removeNonFertile();
 		this.removeUnreachable();
-		
+
 		if (nonTerminalSymbols.size() == 0) {
 			return false;
 		}
-		
+
 		Map<Symbol, Set<Symbol>> symbolSet = new HashMap<Symbol, Set<Symbol>>();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			Set<Symbol> temp = new HashSet<Symbol>();
 			for (Production P: nT.getProductionsTo()) {
@@ -468,7 +468,7 @@ public class Grammar {
 			}
 			symbolSet.put(nT, temp);
 		}
-		
+
 		Boolean hasChange = true;
 		while (hasChange) {
 			hasChange = false;
@@ -485,23 +485,23 @@ public class Grammar {
 				symbolSet.get(nT).addAll(toAdd);
 			}
 		}
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			if (symbolSet.get(nT).contains(nT)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/*
 	 * Builds the auxiliary set to epsilon-free transformation
 	 * */
 	private Set<Symbol> buildNeSet() {
 		Set<Symbol> Ne = new HashSet<Symbol>();
 		Boolean hasChange = true;
-		
+
 		while (hasChange) {
 			hasChange = false;
 			for (Symbol nT: nonTerminalSymbols) {
@@ -514,7 +514,7 @@ public class Grammar {
 						}
 					} else {
 						Boolean toAdd = true;
-						
+
 						for (Symbol S: P.getDestiny()) {
 							if (S.getType() == Symbol.Type.TERMINAL) {
 								toAdd = false;
@@ -526,7 +526,7 @@ public class Grammar {
 								}
 							}
 						}
-						
+
 						if (toAdd) {
 							if (!Ne.contains(nT)) {
 								Ne.add(nT);
@@ -538,18 +538,18 @@ public class Grammar {
 				}
 			}
 		}
-		
+
 		return Ne;
 	}
-	
+
 	/*
 	 * Turns the grammar into epsilon-free returning the NE set
 	 * */
-	public Set<Symbol> toEpsilonFree() {		
+	public Set<Symbol> toEpsilonFree() {
 		Set<Symbol> Ne = buildNeSet();
-			
+
 		for (Symbol nT: nonTerminalSymbols) {
-			Set<Production> prodsToRemove = new HashSet<Production>();	
+			Set<Production> prodsToRemove = new HashSet<Production>();
 			for (Production P: nT.getProductionsTo()) {
 				if (P.getDestinyString().contains("&")) {
 					prodsToRemove.add(P);
@@ -557,7 +557,7 @@ public class Grammar {
 			}
 			nT.getProductionsTo().removeAll(prodsToRemove);
 		}
-		
+
 		int count = 0;
 		for (Symbol nT: nonTerminalSymbols) {
 			for (Production P: nT.getProductionsTo()) {
@@ -570,7 +570,7 @@ public class Grammar {
 				count = (temp > count) ? temp : count;
 			}
 		}
-		
+
 		for (int i = 0; i < count; i++) {
 			for (Symbol nT: nonTerminalSymbols) {
 				Set<Production> toAdd = new HashSet<Production>();
@@ -593,22 +593,22 @@ public class Grammar {
 				}
 			}
 		}
-		
+
 		if (Ne.contains(initialSymbol)) {
 			Symbol S = new Symbol(initialSymbol.toString() + "'", Symbol.Type.NON_TERMINAL);
-			
+
 			Symbol[] s0 = {initialSymbol};
 			Symbol[] s1 = {new Symbol("&", Symbol.Type.TERMINAL)};
-			
+
 			addProduction(new Production(S, s0));
 			addProduction(new Production(S, s1));
-			
+
 			initialSymbol = S;
 		}
-		
+
 		return Ne;
 	}
-	
+
 	/*
 	 * Builds the auxiliary set to remove simple productions
 	 * */
@@ -616,7 +616,7 @@ public class Grammar {
 		Grammar.NaCalculated.add(nT);
 		Set<Symbol> Na = new HashSet<Symbol>();
 		Na.add(nT);
-		
+
 		for (Production P: nT.getProductionsTo()) {
 			if (P.getDestiny().length == 1 && P.getDestiny()[0].getType() == Symbol.Type.NON_TERMINAL) {
 				Na.add(P.getDestiny()[0]);
@@ -625,21 +625,21 @@ public class Grammar {
 				}
 			}
 		}
-		
+
 		return Na;
 	}
-	
+
 	/*
 	 * Remove simple productions returning the NA sets
 	 * */
 	public Map<Symbol, Set<Symbol>> removeSimpleProductions() {
 		Map<Symbol, Set<Symbol>> Na = new HashMap<Symbol, Set<Symbol>>();
 		Grammar.NaCalculated.clear();
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			Na.put(nT, buildNaSet(nT));
 		}
-		
+
 		Boolean hasChange = true;
 		while (hasChange) {
 			hasChange = false;
@@ -656,7 +656,7 @@ public class Grammar {
 				Na.get(nT).addAll(toAdd);
 			}
 		}
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			Set<Production> toRemove = new HashSet<Production>();
 			for (Production P: nT.getProductionsTo()) {
@@ -666,7 +666,7 @@ public class Grammar {
 			}
 			nT.getProductionsTo().removeAll(toRemove);
 		}
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			Set<Production> toAdd = new HashSet<Production>();
 			for (Symbol S: Na.get(nT)) {
@@ -678,10 +678,10 @@ public class Grammar {
 				addProduction(P);
 			}
 		}
-		
+
 		return Na;
 	}
-	
+
 	/*
 	 * Turns into a proper grammar
 	 * */
@@ -691,63 +691,63 @@ public class Grammar {
 		this.removeNonFertile();
 		this.removeUnreachable();
 	}
-	
+
 	/*
 	 * Returns the grammar in String format
 	 * */
 	public String toString() {
 		String ln = System.getProperty("line.separator");
 		String ret = "";
-		
+
 		String temp = initialSymbol.toString() + "->";
 		Boolean grepFlag = false;
-		
+
 		for (Production P: initialSymbol.getProductionsTo()) {
 			if (grepFlag) {
 				temp += "|";
 			}
-			
+
 			temp += P.getDestinyString();
-			
+
 			grepFlag = true;
 		}
-		
+
 		ret += temp + ln;
-		
+
 		for (Symbol nT: nonTerminalSymbols) {
 			if (!initialSymbol.equals(nT)) {
 				temp = nT.toString() + "->";
 				grepFlag = false;
-				
+
 				for (Production P: nT.getProductionsTo()) {
 					if (grepFlag) {
 						temp += "|";
 					}
-					
+
 					temp += P.getDestinyString();
-					
+
 					grepFlag = true;
 				}
-				
+
 				ret += temp + ln;
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	/*
 	 * Parse a grammar
 	 * */
 	public static Grammar readGrammar(String text) {
 		Grammar G = new Grammar();
-		
+
 		String[] lines = text.split(System.getProperty("line.separator"));
 		Map<String, Symbol> symbols = new HashMap<String, Symbol>();
-		
+
 		for (String l: lines) {
-			String FROM = l.split("-")[0];
-			
+			String FROM = l.split("(\\s+)-")[0];
+
 			Symbol S;
 			if (!symbols.containsKey(FROM)) {
 				S = new Symbol(FROM, Symbol.Type.NON_TERMINAL);
@@ -755,22 +755,21 @@ public class Grammar {
 			} else {
 				S = symbols.get(FROM);
 			}
-			
-			
-			String sub = l.split(">")[1];
-			String prods[] = sub.split("\\|");
-			
+
+			String sub = l.split(">(\\s+)")[1];
+			String prods[] = sub.split("(\\s+)\\|(\\s+)");
+
 			for (String j: prods) {
 				LinkedList<Symbol> toAdd = new LinkedList<Symbol>();
 				for (String k: j.split("\\s+")) {
 					Symbol.Type type = null;
-					
+
 					if (k.matches("[A-Z]+.*")) {
 						type = Symbol.Type.NON_TERMINAL;
 					} else if (k.matches("[^A-Z]*")) {
 						type = Symbol.Type.TERMINAL;
 					}
-					
+
 					if (type != null) {
 						if (!symbols.containsKey(k)) {
 							symbols.put(k, new Symbol(k, type));
@@ -785,5 +784,5 @@ public class Grammar {
 		
 		return G;
 	}
-	
+
 }
